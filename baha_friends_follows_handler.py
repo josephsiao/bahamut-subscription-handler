@@ -123,12 +123,16 @@ class BahaFriends():
         """Read ids from text file that need to be ignored."""
         with open('exclude_ids.txt', mode='r', encoding='utf-8') as f:
             ids = []
+            illegal_ids = []
             for line in f.readlines():
                 if re.search('^([a-zA-Z])([a-zA-Z0-9]){1,11}$', line.strip()):
                     ids.append(line.strip())
+                else:
+                    illegal_ids.append(line.strip())
 
         self.exclude_ids = ids
         logging.info('Exclude IDs: %s', self.exclude_ids)
+        logging.warning('Illegal IDs in exclude IDs: %s', illegal_ids)
 
 
 def init_log():
