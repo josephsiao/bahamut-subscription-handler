@@ -2,6 +2,7 @@
 
 import logging
 import random
+import re
 import time
 
 from selenium import webdriver
@@ -37,6 +38,8 @@ class BahaFriends():
         self.command = command
         self.driver = driver
         self.nums = ['0', '1', '2', '3', '5']
+        self.exclude_ids = []
+        self.get_exclude_baha_id()
         self.baha_login()
         self.get_baha_friends_info()
         self.baha_friends_process()
@@ -79,6 +82,9 @@ class BahaFriends():
         logging.info('Processing..')
         try:
             for index, element in enumerate(self.friends_id):
+                if element.text in self.exclude_ids:
+                    logging.info('(No.%d) Ignore ID: %s', index, element.text)
+                    continue
                 # Wait for some seconds each time
                 time.sleep(random.random() + 2)
                 for i in range(5):
@@ -112,6 +118,17 @@ class BahaFriends():
             logging.info('ID: %s, %s changed from %s to %s.',
                          friend_id, self.follows[self.nums[num]],
                          prev, curr)
+
+    def get_exclude_baha_id(self):
+        """Read ids from text file that need to be ignored."""
+        with open('exclude_ids.txt', mode='r', encoding='utf-8') as f:
+            ids = []
+            for line in f.readlines():
+                if re.search('^([a-zA-Z])([a-zA-Z0-9]){1,11}$', line.strip()):
+                    ids.append(line.strip())
+
+        self.exclude_ids = ids
+        logging.info('Exclude IDs: %s', self.exclude_ids)
 
 
 def init_log():
