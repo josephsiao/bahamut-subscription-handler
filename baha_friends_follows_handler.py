@@ -138,7 +138,7 @@ class BahaFriends():
 def init_log():
     """Init the logger."""
     FORMAT = '%(asctime)-20s %(levelname)-9s %(message)s'
-    DATEFORMAT = '%d-%M-%Y %H:%M:%S'
+    DATEFORMAT = '%Y-%m-%d %H:%M:%S'
     handler = logging.FileHandler("log.log", mode='w', encoding="utf-8")
     logging.basicConfig(handlers=[handler],
                         format=FORMAT,
